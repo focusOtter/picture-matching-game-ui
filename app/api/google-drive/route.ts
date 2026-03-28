@@ -7,25 +7,40 @@ export async function GET(request: NextRequest) {
       connection: 'google-oauth2'
     })
 
-    const searchParams = request.nextUrl.searchParams
-    const folderName = searchParams.get('folder')
-    console.log('the folder name', folderName)
+    const folderName = request.nextUrl.searchParams.get('folder')
 
-
-
-    // If we have a folder name, search for it
-    if (folderName) {
-      const res = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(folderName)}'+and+mimeType='application/vnd.google-apps.folder'&fields=files(id,name)`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-      const data = await res.json()
-      return NextResponse.json(data)
+    if (!folderName) {
+      return NextResponse.json({ error: 'folder query param is required' }, { status: 400 })
     }
 
+    // Step 1: Find the folder by name
+    const folderParams = new URLSearchParams({
+      q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder'`,
+      fields: 'files(id,name)'
+    })
 
+    const folderRes = await fetch(
+      `https://www.googleapis.com/drive/v3/files?${folderParams}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    const { files } = await folderRes.json()
+
+    if (!files?.length) {
+      return NextResponse.json({ error: `Folder "${folderName}" not found` }, { status: 404 })
+    }
+
+    // Step 2: Fetch images from that folder
+    const imageParams = new URLSearchParams({
+      q: `'${files[0].id}' in parents and mimeType contains 'image/'`,
+      fields: 'files(id,name,mimeType,thumbnailLink,webContentLink)'
+    })
+
+    const imageRes = await fetch(
+      `https://www.googleapis.com/drive/v3/files?${imageParams}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    const imageData = await imageRes.json()
+    return NextResponse.json(imageData)
 
   } catch (error) {
     console.error('Google Drive API error:', error)

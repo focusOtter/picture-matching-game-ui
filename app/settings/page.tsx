@@ -3,7 +3,8 @@ import { SettingsContent } from '@/components/settings-content'
 
 async function isGoogleConnected() {
   try {
-    await auth0.getAccessTokenForConnection({ connection: 'google-oauth2' })
+    const sampleToken = await auth0.getAccessTokenForConnection({ connection: 'google-oauth2' })
+    console.log('the sample token, sample', sampleToken)
     return true
   } catch {
     return false
