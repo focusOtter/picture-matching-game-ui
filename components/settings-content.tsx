@@ -56,6 +56,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
       }
 
       const data = await res.json()
+      console.log('what is the data?', data)
 
       if (data.error) {
         setError(data.error)
