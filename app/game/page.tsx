@@ -267,59 +267,62 @@ export default function GamePage() {
           {cards.map((card, index) => (
             <motion.div
               key={card.id}
-              initial={{ scale: 0, rotateY: 0 }}
-              animate={{ 
-                scale: 1,
-                rotateY: card.isFlipped || card.isMatched ? 180 : 0
-              }}
-              transition={{ 
-                scale: { delay: index * 0.05 },
-                rotateY: { duration: 0.4 }
-              }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: index * 0.05 }}
               className="perspective-1000"
             >
               <button
                 onClick={() => handleCardClick(index)}
                 disabled={gameState !== 'playing' || card.isFlipped || card.isMatched || isProcessing}
-                className={`preserve-3d relative h-28 w-20 sm:h-32 sm:w-24 transition-transform ${
+                className={`relative h-28 w-20 sm:h-32 sm:w-24 ${
                   gameState === 'playing' && !card.isFlipped && !card.isMatched && !isProcessing
-                    ? 'cursor-pointer hover:scale-105'
+                    ? 'cursor-pointer'
                     : ''
                 }`}
               >
-                {/* Card Back */}
-                <div className={`backface-hidden absolute inset-0 flex items-center justify-center rounded-xl border-2 shadow-lg transition-colors ${
-                  card.isMatched ? 'border-game-success bg-game-success/10' : 'border-border bg-card'
-                }`}>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
-                    <span className="text-2xl font-bold text-muted-foreground">?</span>
+                <div 
+                  className="preserve-3d relative h-full w-full transition-transform duration-500"
+                  style={{ 
+                    transform: card.isFlipped || card.isMatched ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  }}
+                >
+                  {/* Card Back */}
+                  <div className={`backface-hidden absolute inset-0 flex items-center justify-center rounded-xl border-2 shadow-lg transition-colors ${
+                    card.isMatched ? 'border-game-success bg-game-success/10' : 'border-border bg-card'
+                  }`}>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+                      <span className="text-2xl font-bold text-muted-foreground">?</span>
+                    </div>
                   </div>
-                </div>
-                
-                {/* Card Front */}
-                <div className={`backface-hidden rotate-y-180 absolute inset-0 overflow-hidden rounded-xl border-2 shadow-lg ${
-                  card.isMatched ? 'border-game-success ring-2 ring-game-success/50' : 'border-border'
-                }`}>
-                  <Image
-                    src={card.imageUrl}
-                    alt="Card"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 80px, 96px"
-                  />
-                  {card.isMatched && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute inset-0 flex items-center justify-center bg-game-success/30"
-                    >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-game-success">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    </motion.div>
-                  )}
+                  
+                  {/* Card Front */}
+                  <div className={`backface-hidden absolute inset-0 overflow-hidden rounded-xl border-2 shadow-lg ${
+                    card.isMatched ? 'border-game-success ring-2 ring-game-success/50' : 'border-border'
+                  }`}
+                  style={{ transform: 'rotateY(180deg)' }}
+                  >
+                    <Image
+                      src={card.imageUrl}
+                      alt="Card"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 80px, 96px"
+                    />
+                    {card.isMatched && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute inset-0 flex items-center justify-center bg-game-success/30"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-game-success">
+                          <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               </button>
             </motion.div>
