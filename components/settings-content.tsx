@@ -199,12 +199,11 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
                         transition={{ delay: idx * 0.05 }}
                         className="relative aspect-square overflow-hidden rounded-lg"
                       >
-                        <Image
+                        {/* Use regular img tag for API proxy URLs */}
+                        <img
                           src={img}
                           alt={`Custom image ${idx + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="60px"
+                          className="h-full w-full object-cover"
                         />
                       </motion.div>
                     ))}
