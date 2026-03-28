@@ -40,48 +40,34 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
     setGoogleDriveFolderName(folderInput)
     
     try {
-      // First, find the folder by name
-      const folderRes = await fetch(`/api/google-drive?folder=${encodeURIComponent(folderInput)}`)
-      const folderData = await folderRes.json()
+      const res = await fetch(`/api/google-drive?folder=${encodeURIComponent(folderInput)}`)
       
-      if (folderData.error) {
-        throw new Error(folderData.error)
-      }
-      
-      if (!folderData.files || folderData.files.length === 0) {
-        setError(`Folder "${folderInput}" not found in your Google Drive`)
-        setIsLoadingImages(false)
+      // Check if response is ok before parsing JSON
+      if (!res.ok) {
+        const text = await res.text()
+        try {
+          const errorData = JSON.parse(text)
+          setError(errorData.error || 'Failed to load images from Google Drive')
+        } catch {
+          setError(text || 'Failed to load images from Google Drive')
+        }
         return
       }
       
-      const folderId = folderData.files[0].id
+      const data = await res.json()
       
-      // Then, fetch images from that folder
-      const imagesRes = await fetch(`/api/google-drive?folderId=${folderId}`)
-      const imagesData = await imagesRes.json()
-      
-      if (imagesData.error) {
-        throw new Error(imagesData.error)
+      if (data.error) {
+        setError(data.error)
+        return
       }
       
-      if (!imagesData.files || imagesData.files.length === 0) {
+      if (!data.files || data.files.length === 0) {
         setError(`No images found in folder "${folderInput}"`)
-        setIsLoadingImages(false)
         return
       }
       
-      // Use our proxy endpoint to fetch private file bytes
-      const imageUrls = imagesData.files
-        .filter((file: { id: string; mimeType?: string }) => 
-          file.mimeType?.startsWith('image/'))
-        .map((file: { id: string }) => `/api/google-drive/file/${file.id}`)
-      
-      if (imageUrls.length === 0) {
-        setError(`No accessible images found in folder "${folderInput}"`)
-        setIsLoadingImages(false)
-        return
-      }
-      
+      // Use proxy endpoint to fetch private file bytes
+      const imageUrls = data.files.map((file: { id: string }) => `/api/google-drive/file/${file.id}`)
       setCustomImages(imageUrls)
     } catch (err) {
       console.error('Error loading images:', err)
