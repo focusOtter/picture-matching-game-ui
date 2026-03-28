@@ -9,17 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useGameStore, DEFAULT_IMAGES } from '@/lib/game-store'
 
-// Mock images that simulate Google Drive images
-const MOCK_DRIVE_IMAGES = [
-  'https://images.unsplash.com/photo-1474511320723-9a56873571b7?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=200&h=200&fit=crop',
-]
-
 interface SettingsContentProps {
   isGoogleConnected: boolean
 }
@@ -35,11 +24,11 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
 
   const [folderInput, setFolderInput] = useState(googleDriveFolderName)
   const [isLoadingImages, setIsLoadingImages] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleDisconnect = () => {
     disconnectGoogleDrive()
     setFolderInput('')
-    // Redirect to disconnect endpoint if needed, or just clear local state
     window.location.href = '/auth/logout?returnTo=/settings'
   }
 
@@ -47,14 +36,58 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
     if (!folderInput.trim()) return
     
     setIsLoadingImages(true)
+    setError(null)
     setGoogleDriveFolderName(folderInput)
     
-    // Simulate loading images from Google Drive
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Use mock images for now - this would be replaced with actual Google Drive API call
-    setCustomImages(MOCK_DRIVE_IMAGES)
-    setIsLoadingImages(false)
+    try {
+      // First, find the folder by name
+      const folderRes = await fetch(`/api/google-drive?folder=${encodeURIComponent(folderInput)}`)
+      const folderData = await folderRes.json()
+      
+      if (folderData.error) {
+        throw new Error(folderData.error)
+      }
+      
+      if (!folderData.files || folderData.files.length === 0) {
+        setError(`Folder "${folderInput}" not found in your Google Drive`)
+        setIsLoadingImages(false)
+        return
+      }
+      
+      const folderId = folderData.files[0].id
+      
+      // Then, fetch images from that folder
+      const imagesRes = await fetch(`/api/google-drive?folderId=${folderId}`)
+      const imagesData = await imagesRes.json()
+      
+      if (imagesData.error) {
+        throw new Error(imagesData.error)
+      }
+      
+      if (!imagesData.files || imagesData.files.length === 0) {
+        setError(`No images found in folder "${folderInput}"`)
+        setIsLoadingImages(false)
+        return
+      }
+      
+      // Extract thumbnail URLs from the images
+      const imageUrls = imagesData.files
+        .filter((file: { thumbnailLink?: string }) => file.thumbnailLink)
+        .map((file: { thumbnailLink: string }) => file.thumbnailLink.replace('=s220', '=s400'))
+      
+      if (imageUrls.length === 0) {
+        setError(`No accessible images found in folder "${folderInput}"`)
+        setIsLoadingImages(false)
+        return
+      }
+      
+      setCustomImages(imageUrls)
+    } catch (err) {
+      console.error('Error loading images:', err)
+      setError('Failed to load images from Google Drive. Please try again.')
+    } finally {
+      setIsLoadingImages(false)
+    }
   }
 
   return (
@@ -142,6 +175,9 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
                 <p className="mt-2 text-xs text-muted-foreground">
                   Enter the name of a folder in your Google Drive containing images
                 </p>
+                {error && (
+                  <p className="mt-2 text-sm text-destructive">{error}</p>
+                )}
               </div>
 
               {/* Loaded Images Preview */}
