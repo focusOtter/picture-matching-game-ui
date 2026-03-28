@@ -15,6 +15,7 @@ export default function HomePage() {
     { value: 'medium', label: 'Medium', description: '5 matches to win' },
   ]
 
+  console.log('app base', process.env.APP_BASE_URL)
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content */}
@@ -135,11 +136,10 @@ export default function HomePage() {
               <button
                 key={d.value}
                 onClick={() => setDifficulty(d.value)}
-                className={`group relative rounded-xl border-2 px-6 py-4 transition-all ${
-                  difficulty === d.value
+                className={`group relative rounded-xl border-2 px-6 py-4 transition-all ${difficulty === d.value
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50'
-                }`}
+                  }`}
               >
                 <span className="block text-lg font-semibold">{d.label}</span>
                 <span className="block text-sm text-muted-foreground">{d.description}</span>
