@@ -14,6 +14,7 @@ export default function HomePage() {
     { value: 'easy', label: 'Easy', description: '3 matches to win' },
     { value: 'medium', label: 'Medium', description: '5 matches to win' },
   ]
+  console.log('app base TEST', process.env.NEXT_APP_TEST)
 
   return (
     <div className="min-h-screen bg-background">
