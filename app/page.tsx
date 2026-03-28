@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Settings, Play, Trophy, Clock, Brain, Sparkles } from 'lucide-react'
+import { Play, Trophy, Clock, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useGameStore, type Difficulty, DIFFICULTY_CONFIG } from '@/lib/game-store'
 import { CardAnimation } from '@/components/card-animation'
@@ -19,33 +18,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center justify-between p-6">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2"
-        >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <Brain className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold">MemoryMatch</span>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <Link href="/settings">
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </Link>
-        </motion.div>
-      </header>
-
       {/* Main Content */}
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <div className="mx-auto max-w-4xl px-6 py-12">
         {/* Hero Section */}
         <div className="mb-16 text-center">
           <motion.div
@@ -199,7 +173,7 @@ export default function HomePage() {
             </Button>
           </Link>
         </motion.div>
-      </main>
+      </div>
     </div>
   )
 }

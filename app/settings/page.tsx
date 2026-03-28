@@ -64,17 +64,8 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center gap-4 border-b p-6">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <h1 className="text-2xl font-bold">Settings</h1>
-      </header>
-
-      <main className="mx-auto max-w-2xl px-6 py-8">
+      <div className="mx-auto max-w-2xl px-6 py-8">
+        <h1 className="mb-8 text-2xl font-bold">Settings</h1>
         {/* Google Drive Connection */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -272,7 +263,7 @@ export default function SettingsPage() {
             </Button>
           </Link>
         </motion.div>
-      </main>
+      </div>
     </div>
   )
 }

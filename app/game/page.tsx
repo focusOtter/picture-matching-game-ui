@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Clock, Trophy, RotateCcw, Home, Sparkles } from 'lucide-react'
+import { Clock, Trophy, RotateCcw, Home, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useGameStore, DIFFICULTY_CONFIG, DEFAULT_IMAGES, type Card } from '@/lib/game-store'
 
@@ -187,15 +187,8 @@ export default function GamePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b p-4">
-        <Link href="/">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        </Link>
-        
+      {/* Game Controls Bar */}
+      <div className="flex items-center justify-between border-b p-4">
         <div className="flex items-center gap-6">
           {/* Score */}
           <div className="flex items-center gap-2">
@@ -216,11 +209,11 @@ export default function GamePage() {
           </div>
         </div>
         
-        <Button variant="ghost" size="sm" onClick={initializeCards} className="gap-2">
+        <Button variant="outline" size="sm" onClick={initializeCards} className="gap-2">
           <RotateCcw className="h-4 w-4" />
           Restart
         </Button>
-      </header>
+      </div>
 
       {/* Game Board */}
       <main className="mx-auto max-w-3xl px-4 py-8">
