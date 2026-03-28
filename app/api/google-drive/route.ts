@@ -42,6 +42,8 @@ export async function GET(request: NextRequest) {
       { headers: { Authorization: `Bearer ${token}` } }
     )
     const imageData = await imageRes.json()
+
+    console.log('the image data from the Pics folder', imageData)
     return NextResponse.json(imageData)
 
   } catch (error) {
