@@ -68,6 +68,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
       
       // Use proxy endpoint to fetch private file bytes
       const imageUrls = data.files.map((file: { id: string }) => `/api/google-drive/file/${file.id}`)
+      console.log('[v0] Loaded image URLs:', imageUrls)
       setCustomImages(imageUrls)
     } catch (err) {
       console.error('Error loading images:', err)

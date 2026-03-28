@@ -7,6 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
+    console.log('[v0] Fetching file from Google Drive:', id)
     
     const { token } = await auth0.getAccessTokenForConnection({
       connection: 'google-oauth2'
@@ -21,11 +22,15 @@ export async function GET(
     )
 
     if (!res.ok) {
+      const errorText = await res.text()
+      console.log('[v0] Google Drive file fetch failed:', res.status, errorText)
       return NextResponse.json(
         { error: 'Failed to fetch file from Google Drive' },
         { status: res.status }
       )
     }
+    
+    console.log('[v0] Successfully fetched file, streaming response')
 
     // Get the content type from the response
     const contentType = res.headers.get('content-type') || 'image/jpeg'
