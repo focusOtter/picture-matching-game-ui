@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
     )
     const { files } = await folderRes.json()
 
+    console.log('the files in the folder', files)
+
     if (!files?.length) {
       return NextResponse.json({ error: `Folder "${folderName}" not found` }, { status: 404 })
     }
