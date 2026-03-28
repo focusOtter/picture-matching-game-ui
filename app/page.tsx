@@ -13,7 +13,6 @@ export default function HomePage() {
   const difficulties: { value: Difficulty; label: string; description: string }[] = [
     { value: 'easy', label: 'Easy', description: '3 matches to win' },
     { value: 'medium', label: 'Medium', description: '5 matches to win' },
-    { value: 'hard', label: 'Hard', description: '7 matches to win' },
   ]
 
   return (
