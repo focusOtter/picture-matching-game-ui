@@ -15,7 +15,6 @@ export default function HomePage() {
     { value: 'medium', label: 'Medium', description: '5 matches to win' },
   ]
 
-
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content */}
