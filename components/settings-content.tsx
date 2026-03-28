@@ -70,10 +70,11 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
         return
       }
       
-      // Extract thumbnail URLs from the images
+      // Use our proxy endpoint to fetch private file bytes
       const imageUrls = imagesData.files
-        .filter((file: { thumbnailLink?: string }) => file.thumbnailLink)
-        .map((file: { thumbnailLink: string }) => file.thumbnailLink.replace('=s220', '=s400'))
+        .filter((file: { id: string; mimeType?: string }) => 
+          file.mimeType?.startsWith('image/'))
+        .map((file: { id: string }) => `/api/google-drive/file/${file.id}`)
       
       if (imageUrls.length === 0) {
         setError(`No accessible images found in folder "${folderInput}"`)
