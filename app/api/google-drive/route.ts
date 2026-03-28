@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams
     const folderName = searchParams.get('folder')
-    const folderId = searchParams.get('folderId')
+    console.log('the folder name', folderName)
 
 
 
