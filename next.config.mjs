@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['https://vm-qyx7dhzcbdl2bwyhthhvvr.vusercontent.net'],
+  allowedDevOrigins: ['vm-vajkbpws5082xr8ieikr2e.vusercontent.net'],
   typescript: {
     ignoreBuildErrors: true,
   },
