@@ -42,6 +42,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
     try {
       const res = await fetch(`/api/google-drive?folder=${encodeURIComponent(folderInput)}`)
 
+      console.log('the res', res)
       // Check if response is ok before parsing JSON
       console.log('is the response ok?', res.ok)
       if (!res.ok) {
