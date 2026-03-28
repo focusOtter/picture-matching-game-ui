@@ -41,20 +41,23 @@ export function CardAnimation() {
         {cards.map((card, index) => (
           <motion.div
             key={card.id}
-            initial={{ rotateY: 0 }}
             animate={{ 
-              rotateY: flippedCards.includes(index) ? 180 : 0,
               scale: flippedCards.includes(index) ? 1.05 : 1
             }}
             transition={{ 
-              duration: 0.5,
+              duration: 0.3,
               type: 'spring',
               stiffness: 200,
               damping: 20
             }}
             className="perspective-1000"
           >
-            <div className="preserve-3d relative h-20 w-16 sm:h-24 sm:w-20">
+            <div 
+              className="preserve-3d relative h-20 w-16 sm:h-24 sm:w-20 transition-transform duration-500"
+              style={{ 
+                transform: flippedCards.includes(index) ? 'rotateY(180deg)' : 'rotateY(0deg)'
+              }}
+            >
               {/* Card Back */}
               <div className="backface-hidden absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card shadow-lg">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
@@ -62,7 +65,10 @@ export function CardAnimation() {
                 </div>
               </div>
               {/* Card Front */}
-              <div className="backface-hidden rotate-y-180 absolute inset-0 overflow-hidden rounded-xl border-2 border-border shadow-lg">
+              <div 
+                className="backface-hidden absolute inset-0 overflow-hidden rounded-xl border-2 border-border shadow-lg"
+                style={{ transform: 'rotateY(180deg)' }}
+              >
                 <Image
                   src={card.imageUrl}
                   alt={`Card ${card.id}`}
