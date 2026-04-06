@@ -29,7 +29,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
   const handleDisconnect = () => {
     disconnectGoogleDrive()
     setFolderInput('')
-    window.location.href = '/auth/logout?returnTo=/settings'
+    window.location.href = '/auth/logout'
   }
 
   const handleLoadImages = async () => {
