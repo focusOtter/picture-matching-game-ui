@@ -16,6 +16,7 @@ interface SettingsContentProps {
 export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
   const {
     googleDriveFolderName,
+    connectGoogleDrive,
     disconnectGoogleDrive,
     setGoogleDriveFolderName,
     customImages,
@@ -73,6 +74,7 @@ export function SettingsContent({ isGoogleConnected }: SettingsContentProps) {
       const imageUrls = data.files.map((file: { id: string }) => `/api/google-drive/file/${file.id}`)
       console.log('[v0] Loaded image URLs:', imageUrls)
       setCustomImages(imageUrls)
+      connectGoogleDrive()
     } catch (err) {
       console.error('Error loading images:', err)
       setError('Failed to load images from Google Drive. Please try again.')
